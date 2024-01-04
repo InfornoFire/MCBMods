@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "package": "inforno.mcbmods.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "mixins.mcbmods.refmap.json",
+  "mixins": [
+    "ChatMixin",
+    "ForgeHooksMixin"
+  ]
+}

@@ -1,0 +1,24 @@
+[
+  {
+    "modid": "mcbmods",
+    "name": "MCBMods",
+    "description": "Random stuff for the MCB server.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "https://www.curseforge.com/minecraft/mc-mods/mcbmods",
+    "authorList": [
+      "Inforno"
+    ],
+    "credits": "blooditor for making MCB",
+    "logoFile": "",
+    "requiredMods": [
+      "mcbClient",
+      "journeymap"
+    ],
+    "dependencies": [
+      "mcbClient",
+      "journeymap"
+    ]
+  }
+]
