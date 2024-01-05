@@ -1,27 +1,25 @@
 package inforno.mcbmods.notifications;
 
+import inforno.mcbmods.MCBMods;
 import net.minecraft.client.Minecraft;
 
 import java.awt.*;
 import java.awt.TrayIcon.MessageType;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 public class Notifications {
-
-    public static boolean focused;
 
     public static void macNotification(String title, String message) {
         Runtime runtime = Runtime.getRuntime();
         String[] args = {"osascript", "-e", "display notification \"" + message + "\" with title \"" + title + "\""};
         try {
-            Process process = runtime.exec(args);
+            runtime.exec(args);
         } catch (IOException e) {
-            e.printStackTrace();
+            MCBMods.LOGGER.error("Error in Mac notification:", e);
         }
     }
 
-    public static void windowsNotification(String title, String message) throws AWTException, MalformedURLException {
+    public static void windowsNotification(String title, String message) throws AWTException {
         SystemTray tray = SystemTray.getSystemTray();
         Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
         TrayIcon trayIcon = new TrayIcon(image, "notification");
@@ -35,12 +33,10 @@ public class Notifications {
         if (!Minecraft.isRunningOnMac) {
             try {
                 windowsNotification(title, message);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (AWTException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                MCBMods.LOGGER.error("Error in Windows notification:", e);
             }
-        } else if (Minecraft.isRunningOnMac) {
+        } else {
             macNotification(title, message);
         }
     }

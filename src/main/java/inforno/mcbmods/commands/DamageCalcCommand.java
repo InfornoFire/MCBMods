@@ -5,8 +5,6 @@ import gg.essential.api.commands.DefaultHandler;
 import gg.essential.api.utils.GuiUtil;
 import inforno.mcbmods.gui.DamageCalcGui;
 
-import java.util.Objects;
-
 public class DamageCalcCommand extends Command {
 
     public DamageCalcCommand() {
@@ -15,6 +13,6 @@ public class DamageCalcCommand extends Command {
 
     @DefaultHandler
     public void handle() {
-        GuiUtil.open(Objects.requireNonNull(new DamageCalcGui()));
+        GuiUtil.open(new DamageCalcGui());
     }
 }

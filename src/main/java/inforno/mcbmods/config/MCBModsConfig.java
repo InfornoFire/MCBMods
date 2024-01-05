@@ -1,9 +1,9 @@
 package inforno.mcbmods.config;
 
-import inforno.mcbmods.MCBMods;
 import gg.essential.vigilance.Vigilant;
 import gg.essential.vigilance.data.Property;
 import gg.essential.vigilance.data.PropertyType;
+import inforno.mcbmods.MCBMods;
 
 import java.io.File;
 import java.util.HashMap;
@@ -166,8 +166,7 @@ public class MCBModsConfig extends Vigilant {
             addDependency("displaySwitchDelay", "displayGunData");
             addDependency("displayPaintjob", "displayGunData");
         } catch (Exception e) {
-            System.out.println("MCBMods failed to access property");
-            e.printStackTrace();
+            MCBMods.LOGGER.error("Failed to access config properties:", e);
         }
     }
 }

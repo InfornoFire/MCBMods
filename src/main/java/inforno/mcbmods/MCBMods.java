@@ -10,15 +10,17 @@ import inforno.mcbmods.events.FMLEvents;
 import inforno.mcbmods.keybinds.KeyBinds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.versioning.ComparableVersion;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
@@ -41,6 +43,8 @@ public class MCBMods {
     public static final String VERSION = "1.4.3";
     public static final String MODID = "mcbmods";
 
+    public static final Logger LOGGER = LogManager.getLogger(MODID);
+
     public static String prefix = "§c[§6MCBMods§c]§r ";
 
     public static String latestVersion;
@@ -52,12 +56,13 @@ public class MCBMods {
 
     public static HashMap<Integer, float[]> shopData = new HashMap<>();
 
-    @SuppressWarnings("deprecation")
+    public static Class<?> customEnderChest;
+
     @EventHandler
     public void preinit(FMLPreInitializationEvent e) {
         KeyBinds.register();
         MinecraftForge.EVENT_BUS.register(new Events());
-        FMLCommonHandler.instance().bus().register(new FMLEvents());
+        MinecraftForge.EVENT_BUS.register(new FMLEvents());
     }
 
     @EventHandler
@@ -75,6 +80,15 @@ public class MCBMods {
 
     @EventHandler
     public void onLoadComplete(FMLLoadCompleteEvent event) {
+        try {
+            Class<?> testedClass = Class.forName("com.mcb.client.c.d");
+            if (GuiContainer.class.isAssignableFrom(testedClass)) {
+                customEnderChest = testedClass;
+            }
+        } catch (Exception e) {
+            LOGGER.error("MCB Client dependency error:", e);
+        }
+
         if (MCBModsConfig.loadShopData) loadShopData();
 
         if (versionChecker() > 0) {
@@ -99,7 +113,7 @@ public class MCBMods {
             latestVersionLink = br.readLine();
             return new ComparableVersion(latestVersion).compareTo(new ComparableVersion(MCBMods.VERSION));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn("Could not check version:", e);
         }
         return 0;
     }
@@ -118,8 +132,7 @@ public class MCBMods {
             }
         } catch (IOException e) {
             EssentialAPI.getNotifications().push("MCBMods", "Failed to Load Shop Data!");
-            System.out.println("Failed to Load Shop Data!");
-            e.printStackTrace();
+            LOGGER.warn("Failed to Load Shop Data:", e);
         }
     }
 
@@ -131,8 +144,7 @@ public class MCBMods {
      * 1: Sell Price, modified by Durability <br>
      * 2: Level <br>
      */
-    @Nullable
-    public static float[] getWorth(ItemStack stack) {
+    public static float @Nullable [] getWorth(ItemStack stack) {
         if (stack == null) return null;
         float[] data;
         if ((data = MCBMods.shopData.get((stack.getItem().getRegistryName() + ":" + stack.getItem().getDamage(stack)).hashCode())) == null) {

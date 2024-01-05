@@ -7,9 +7,9 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public class KeyBinds {
 
-    private static KeyBinding waypointtoggle = new KeyBinding("Waypoint Toggler", Keyboard.KEY_L, "MCBMods");
+    private static final KeyBinding waypointtoggle = new KeyBinding("Waypoint Toggler", Keyboard.KEY_L, "MCBMods");
 
-    public static final void register() {
+    public static void register() {
         ClientRegistry.registerKeyBinding(waypointtoggle);
     }
 

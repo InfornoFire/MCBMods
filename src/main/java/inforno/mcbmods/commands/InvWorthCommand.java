@@ -27,7 +27,7 @@ public class InvWorthCommand extends Command {
 
     public void displayWorth(boolean smart) {
         float totalWorth = 0.0f;
-        float itemData[];
+        float[] itemData;
 
         ItemStack[] inventory = MCBMods.player.get().inventory.mainInventory;
         if (inventory == null) return;
@@ -39,9 +39,9 @@ public class InvWorthCommand extends Command {
 
         if (!smart) {
             ItemStack[] armorInventory = MCBMods.player.get().inventory.armorInventory;
-            for (int i = 0; i < armorInventory.length; i++) {
-                if (armorInventory[i] != null && (itemData = MCBMods.getWorth(armorInventory[i])) != null) {
-                    totalWorth += itemData[1] * armorInventory[i].stackSize;
+            for (ItemStack itemStack : armorInventory) {
+                if (itemStack != null && (itemData = MCBMods.getWorth(itemStack)) != null) {
+                    totalWorth += itemData[1] * itemStack.stackSize;
                 }
             }
         }

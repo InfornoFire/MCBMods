@@ -96,7 +96,7 @@ public class Events {
                                 }
                             } else {
                                 float damageLiving = 1.0f;
-                                if (gun.ammo.size() > 0) {
+                                if (!gun.ammo.isEmpty()) {
                                     damageLiving = gun.ammo.get(0).damageVsLiving * gun.ammo.get(0).numBullets;
                                 }
                                 event.toolTip.add("§cDamage: " + df.format(gun.getDamage(stack) * gun.numBullets * damageLiving / 2) + " §c❤");
@@ -162,10 +162,9 @@ public class Events {
     }
 
     @SubscribeEvent
-    public void onGUIDrawnEvent(GuiScreenEvent.BackgroundDrawnEvent event) throws ClassNotFoundException {
-        Class<?> customEnderChest = Class.forName("com.mcb.client.c.d");
-        if (MCBModsConfig.chestWorth && (event.gui instanceof GuiChest || (customEnderChest.isAssignableFrom(GuiContainer.class) && customEnderChest.isInstance(event.gui)))) {
-            GuiChest chestGui = (GuiChest) event.gui;
+    public void onGUIDrawnEvent(GuiScreenEvent.BackgroundDrawnEvent event) {
+        if (event != null && MCBModsConfig.chestWorth && (event.gui instanceof GuiChest || MCBMods.customEnderChest.isInstance(event.gui))) {
+            GuiContainer chestGui = (GuiContainer) event.gui;
             IInventory chest = ((ContainerChest) chestGui.inventorySlots).getLowerChestInventory();
             float totalWorth = 0.0f;
             float[] worth;
@@ -176,7 +175,7 @@ public class Events {
             FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
             GlStateManager.disableLighting();
             GlStateManager.pushMatrix();
-            GlStateManager.translate(chestGui.guiLeft + chestGui.xSize / 2, chestGui.guiTop, 1);
+            GlStateManager.translate(chestGui.guiLeft + (float) chestGui.xSize / 2, chestGui.guiTop, 1);
             fr.drawString("Worth: $" + df.format(totalWorth), -6, 6, 0x404040, false);
             GlStateManager.popMatrix();
         }
