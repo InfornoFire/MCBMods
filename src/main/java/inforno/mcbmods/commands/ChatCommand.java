@@ -45,7 +45,6 @@ public class ChatCommand extends Command {
     public void replayChat(@DisplayName("player") @Greedy String name) {
         for (NetworkPlayerInfo player : Minecraft.getMinecraft().getNetHandler().getPlayerInfoMap()) {
             if (player.getGameProfile().getName().equalsIgnoreCase(name)) {
-                System.out.println(player.getGameProfile().getName());
                 chat = "/tell " + name;
                 UChat.chat(MCBMods.prefix + "§fYou are now in reply chat.");
                 return;
