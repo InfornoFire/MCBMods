@@ -192,7 +192,7 @@ class DamageCalcGui : WindowScreen(
 
         try {
             Minecraft.getMinecraft().skinManager.loadProfileTextures(
-                MCBMods.player.get().gameProfile,
+                MCBMods.player.gameProfile,
                 { type, location, profileTexture ->
                     when (type) {
                         MinecraftProfileTexture.Type.SKIN -> {
@@ -214,7 +214,7 @@ class DamageCalcGui : WindowScreen(
         } catch (e: Exception) {
         }
 
-        player = object : EntityOtherPlayerMP(Minecraft.getMinecraft().theWorld, MCBMods.player.get().gameProfile) {
+        player = object : EntityOtherPlayerMP(Minecraft.getMinecraft().theWorld, MCBMods.player.gameProfile) {
             override fun getLocationSkin(): ResourceLocation? {
                 return playerLocationSkin ?: DefaultPlayerSkin.getDefaultSkin(this.uniqueID)
             }
