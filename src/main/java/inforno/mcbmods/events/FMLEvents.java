@@ -19,9 +19,9 @@ public class FMLEvents {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (MCBMods.player.get() != null) {
+        if (MCBMods.player != null) {
             if (AfkCommand.afk) {
-                if (Display.isActive() && (MCBMods.player.get().moveForward != 0 || MCBMods.player.get().moveStrafing != 0)) {
+                if (Display.isActive() && (MCBMods.player.moveForward != 0 || MCBMods.player.moveStrafing != 0)) {
                     AfkCommand.afk = false;
                     UChat.chat(MCBMods.prefix + "§bYou are no longer afk.");
                 }

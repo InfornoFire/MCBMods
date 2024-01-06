@@ -29,7 +29,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.function.Supplier;
 
 @Mod(name = MCBMods.NAME, version = MCBMods.VERSION, clientSideOnly = true, modid = MCBMods.MODID,
         dependencies = "required-after:mcbClient;required-after:journeymap;required-after:flansmod",
@@ -50,7 +49,7 @@ public class MCBMods {
     public static String latestVersion;
     public static String latestVersionLink;
 
-    public static Supplier<EntityPlayerSP> player = () -> Minecraft.getMinecraft().thePlayer;
+    public static EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
 
     public static MCBModsConfig config;
 

@@ -50,7 +50,7 @@ public class Events {
             if (MCBModsConfig.notyifyMission && unformatted.startsWith("[MISSION] A random mission will start in one minute!")) {
                 Notifications.notify("MCBMods", "A MCB Mission is about to start!");
             }
-            if (MCBModsConfig.notifyName && unformatted.toLowerCase().contains(MCBMods.player.get().getDisplayNameString().toLowerCase())) {
+            if (MCBModsConfig.notifyName && unformatted.toLowerCase().contains(MCBMods.player.getDisplayNameString().toLowerCase())) {
                 Notifications.notify("MCBMods", unformatted);
             } else if (MCBModsConfig.notifyPM && unformatted.startsWith("> PM from >")) {
                 Notifications.notify("MCBMods", unformatted);
