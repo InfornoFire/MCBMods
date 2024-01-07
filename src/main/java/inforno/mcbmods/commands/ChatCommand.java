@@ -1,14 +1,15 @@
 package inforno.mcbmods.commands;
 
 import com.google.common.collect.ImmutableSet;
-import inforno.mcbmods.MCBMods;
 import gg.essential.api.commands.*;
 import gg.essential.universal.UChat;
-import net.minecraft.client.Minecraft;
+import inforno.mcbmods.MCBMods;
 import net.minecraft.client.network.NetworkPlayerInfo;
 
 import javax.annotation.Nullable;
 import java.util.Set;
+
+import static inforno.mcbmods.MCBMods.mc;
 
 public class ChatCommand extends Command {
 
@@ -43,7 +44,7 @@ public class ChatCommand extends Command {
 
     @SubCommand(value = "r", description = "Reply Chat")
     public void replayChat(@DisplayName("player") @Greedy String name) {
-        for (NetworkPlayerInfo player : Minecraft.getMinecraft().getNetHandler().getPlayerInfoMap()) {
+        for (NetworkPlayerInfo player : mc.getNetHandler().getPlayerInfoMap()) {
             if (player.getGameProfile().getName().equalsIgnoreCase(name)) {
                 chat = "/tell " + name;
                 UChat.chat(MCBMods.prefix + "§fYou are now in reply chat.");

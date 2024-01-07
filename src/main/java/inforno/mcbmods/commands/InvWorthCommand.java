@@ -9,6 +9,8 @@ import net.minecraft.item.ItemStack;
 
 import java.text.DecimalFormat;
 
+import static inforno.mcbmods.MCBMods.mc;
+
 public class InvWorthCommand extends Command {
 
     public InvWorthCommand() {
@@ -29,7 +31,7 @@ public class InvWorthCommand extends Command {
         float totalWorth = 0.0f;
         float[] itemData;
 
-        ItemStack[] inventory = MCBMods.player.inventory.mainInventory;
+        ItemStack[] inventory = mc.thePlayer.inventory.mainInventory;
         if (inventory == null) return;
         for (int i = smart ? 9 : 0; i < inventory.length; i++) {
             if (inventory[i] != null && (itemData = MCBMods.getWorth(inventory[i])) != null) {
@@ -38,7 +40,7 @@ public class InvWorthCommand extends Command {
         }
 
         if (!smart) {
-            ItemStack[] armorInventory = MCBMods.player.inventory.armorInventory;
+            ItemStack[] armorInventory = mc.thePlayer.inventory.armorInventory;
             for (ItemStack itemStack : armorInventory) {
                 if (itemStack != null && (itemData = MCBMods.getWorth(itemStack)) != null) {
                     totalWorth += itemData[1] * itemStack.stackSize;

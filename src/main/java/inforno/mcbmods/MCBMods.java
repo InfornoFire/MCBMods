@@ -9,7 +9,6 @@ import inforno.mcbmods.events.Events;
 import inforno.mcbmods.events.FMLEvents;
 import inforno.mcbmods.keybinds.KeyBinds;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -49,7 +48,7 @@ public class MCBMods {
     public static String latestVersion;
     public static String latestVersionLink;
 
-    public static EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+    public static Minecraft mc = Minecraft.getMinecraft();
 
     public static MCBModsConfig config;
 

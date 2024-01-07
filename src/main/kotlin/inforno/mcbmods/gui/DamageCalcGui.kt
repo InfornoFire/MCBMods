@@ -23,9 +23,7 @@ import gg.essential.universal.UKeyboard
 import gg.essential.universal.USound
 import gg.essential.vigilance.gui.VigilancePalette
 import gg.essential.vigilance.utils.onLeftClick
-import inforno.mcbmods.MCBMods
 import inforno.mcbmods.gui.components.MCBModsDropDown
-import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.EntityOtherPlayerMP
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.OpenGlHelper
@@ -191,8 +189,8 @@ class DamageCalcGui : WindowScreen(
         var skinType: String? = null
 
         try {
-            Minecraft.getMinecraft().skinManager.loadProfileTextures(
-                MCBMods.player.gameProfile,
+            mc.skinManager.loadProfileTextures(
+                mc.thePlayer.gameProfile,
                 { type, location, profileTexture ->
                     when (type) {
                         MinecraftProfileTexture.Type.SKIN -> {
@@ -214,7 +212,7 @@ class DamageCalcGui : WindowScreen(
         } catch (e: Exception) {
         }
 
-        player = object : EntityOtherPlayerMP(Minecraft.getMinecraft().theWorld, MCBMods.player.gameProfile) {
+        player = object : EntityOtherPlayerMP(mc.theWorld, mc.thePlayer.gameProfile) {
             override fun getLocationSkin(): ResourceLocation? {
                 return playerLocationSkin ?: DefaultPlayerSkin.getDefaultSkin(this.uniqueID)
             }
@@ -320,7 +318,7 @@ class DamageCalcGui : WindowScreen(
         }
         player.dataWatcher.updateObject(10, b)
 
-        var playerSP = Minecraft.getMinecraft().thePlayer
+        var playerSP = mc.thePlayer
         player.posX = playerSP.posX
         player.posY = -100.0
         player.posZ = playerSP.posZ
@@ -341,7 +339,7 @@ class DamageCalcGui : WindowScreen(
             itemSlots[index].removeChild(icon)
         }
         val loc = if (item != null) {
-            "/assets/" + Minecraft.getMinecraft().renderItem.itemModelMesher.getItemModel(ItemStack(item)).particleTexture.iconName.replace(
+            "/assets/" + mc.renderItem.itemModelMesher.getItemModel(ItemStack(item)).particleTexture.iconName.replace(
                 ":",
                 "/textures/"
             ) + ".png"
@@ -528,7 +526,7 @@ class DamageCalcGui : WindowScreen(
         ent.rotationPitch = -atan(mouseY / 40.0f) * 20.0f
         ent.rotationYawHead = atan(mouseX / 40.0f) * 40.0f
         ent.prevRotationYawHead = atan(mouseX / 40.0f) * 40.0f
-        val rendermanager = Minecraft.getMinecraft().renderManager
+        val rendermanager = mc.renderManager
         rendermanager.setPlayerViewY(180.0f)
         rendermanager.isRenderShadow = false
         rendermanager.renderEntityWithPosYaw(ent, 0.0, 0.0, 0.0, 0.0f, 1.0f)

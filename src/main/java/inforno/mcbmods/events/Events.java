@@ -11,7 +11,6 @@ import inforno.mcbmods.MCBMods;
 import inforno.mcbmods.commands.AfkCommand;
 import inforno.mcbmods.config.MCBModsConfig;
 import inforno.mcbmods.notifications.Notifications;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
@@ -32,6 +31,8 @@ import org.lwjgl.opengl.Display;
 import java.net.URI;
 import java.text.DecimalFormat;
 
+import static inforno.mcbmods.MCBMods.mc;
+
 public class Events {
 
     private final DecimalFormat df = new DecimalFormat("#.##");
@@ -50,7 +51,7 @@ public class Events {
             if (MCBModsConfig.notyifyMission && unformatted.startsWith("[MISSION] A random mission will start in one minute!")) {
                 Notifications.notify("MCBMods", "A MCB Mission is about to start!");
             }
-            if (MCBModsConfig.notifyName && unformatted.toLowerCase().contains(MCBMods.player.getDisplayNameString().toLowerCase())) {
+            if (MCBModsConfig.notifyName && unformatted.toLowerCase().contains(mc.thePlayer.getDisplayNameString().toLowerCase())) {
                 Notifications.notify("MCBMods", unformatted);
             } else if (MCBModsConfig.notifyPM && unformatted.startsWith("> PM from >")) {
                 Notifications.notify("MCBMods", unformatted);
@@ -172,7 +173,7 @@ public class Events {
                 ItemStack stack = chest.getStackInSlot(i);
                 if ((worth = MCBMods.getWorth(stack)) != null) totalWorth += worth[1] * stack.stackSize;
             }
-            FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
+            FontRenderer fr = mc.fontRendererObj;
             GlStateManager.disableLighting();
             GlStateManager.pushMatrix();
             GlStateManager.translate(chestGui.guiLeft + (float) chestGui.xSize / 2, chestGui.guiTop, 1);

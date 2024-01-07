@@ -1,16 +1,18 @@
 package inforno.mcbmods.events;
 
+import gg.essential.universal.UChat;
 import inforno.mcbmods.MCBMods;
 import inforno.mcbmods.commands.AfkCommand;
 import inforno.mcbmods.config.MCBModsConfig;
 import inforno.mcbmods.keybinds.KeyBinds;
-
-import gg.essential.universal.UChat;
 import journeymap.client.JourneymapClient;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.opengl.Display;
+
+import static inforno.mcbmods.MCBMods.mc;
 
 public class FMLEvents {
 
@@ -19,9 +21,10 @@ public class FMLEvents {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (MCBMods.player != null) {
+        EntityPlayerSP player = mc.thePlayer;
+        if (player != null) {
             if (AfkCommand.afk) {
-                if (Display.isActive() && (MCBMods.player.moveForward != 0 || MCBMods.player.moveStrafing != 0)) {
+                if (Display.isActive() && (player.moveForward != 0 || player.moveStrafing != 0)) {
                     AfkCommand.afk = false;
                     UChat.chat(MCBMods.prefix + "§bYou are no longer afk.");
                 }
