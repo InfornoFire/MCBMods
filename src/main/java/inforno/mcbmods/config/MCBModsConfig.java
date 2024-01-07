@@ -150,7 +150,7 @@ public class MCBModsConfig extends Vigilant {
 
     public static MCBModsConfig INSTANCE = new MCBModsConfig();
 
-    public MCBModsConfig() {
+    private MCBModsConfig() {
         super(new File("./config/mcbmods.toml"), "MCBMods (" + MCBMods.VERSION + ")");
         initialize();
 
