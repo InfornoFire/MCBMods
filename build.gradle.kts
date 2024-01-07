@@ -1,8 +1,9 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.6.21"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    kotlin("jvm") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.22"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("gg.essential.loom") version "0.10.0.+"
     id("dev.architectury.architectury-pack200") version "0.1.3"
     java
@@ -63,7 +64,7 @@ dependencies {
     //     isTransitive = false // Dependencies of mixin are already bundled by minecraft
     // }
 
-    shadowImplementation("gg.essential:loader-launchwrapper:1.1.3")
+    shadowImplementation("gg.essential:loader-launchwrapper:1.2.1")
     implementation("gg.essential:essential-1.8.9-forge:2581") {
         exclude(module = "asm")
         exclude(module = "asm-commons")
@@ -73,6 +74,12 @@ dependencies {
 
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     compileOnly("org.spongepowered:mixin:0.8.5")
+
+    shadowImplementation(platform(kotlin("bom")))
+    shadowImplementation(platform(ktor("bom", "2.2.4", addSuffix = false)))
+
+    shadowImplementation(ktor("serialization-kotlinx-json"))
+    shadowImplementation(ktor("serialization-gson"))
 
     modImplementation(fileTree("libs"))
 }
@@ -114,6 +121,11 @@ tasks {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         configurations = listOf(shadowImplementation)
 
+        relocate("io.ktor", "inforno.mcbmods..ktor")
+        relocate("kotlinx.serialization", "inforno.mcbmods.ktx-serialization")
+        relocate("kotlinx.coroutines", "inforno.mcbmods.ktx-coroutines")
+        relocate("com.google.gson", "inforno.mcbmods.gson")
+
         exclude(
             "**/LICENSE.txt",
             "dummyThing",
@@ -135,3 +147,11 @@ kotlin {
         languageVersion.set(JavaLanguageVersion.of(8))
     }
 }
+
+
+fun DependencyHandler.ktor(module: String, version: String? = null, addSuffix: Boolean = true) =
+    "io.ktor:ktor-$module${if (addSuffix) "-jvm" else ""}${version?.let { ":$version" } ?: ""}"
+
+fun DependencyHandler.ktorClient(module: String, version: String? = null) = ktor("client-${module}", version)
+
+fun DependencyHandler.ktorServer(module: String, version: String? = null) = ktor("server-${module}", version)
