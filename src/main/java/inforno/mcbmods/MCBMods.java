@@ -7,6 +7,7 @@ import inforno.mcbmods.commands.*;
 import inforno.mcbmods.config.MCBModsConfig;
 import inforno.mcbmods.events.Events;
 import inforno.mcbmods.events.FMLEvents;
+import inforno.mcbmods.features.impl.handlers.Loadouts;
 import inforno.mcbmods.keybinds.KeyBinds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -72,7 +73,8 @@ public class MCBMods {
                 new AfkCommand(),
                 new ChatCommand(),
                 new InvWorthCommand(),
-                new DamageCalcCommand()
+                new DamageCalcCommand(),
+                new LoadoutCommand()
         );
     }
 
@@ -88,6 +90,8 @@ public class MCBMods {
         }
 
         if (MCBModsConfig.loadShopData) loadShopData();
+
+        Loadouts.INSTANCE.readSave();
 
         if (versionChecker() > 0) {
             EssentialAPI.getNotifications().push("MCBMods", "New Version available! Click to update to " + latestVersion, () -> {
