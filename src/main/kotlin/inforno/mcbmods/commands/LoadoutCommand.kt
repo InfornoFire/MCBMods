@@ -78,11 +78,10 @@ class LoadoutCommand: Command("loadout") {
                 Loadouts.getLoadoutFromString(str)?.let { Loadouts.loadouts[index] = it }
             }
             else -> {
-                UChat.chat("${MCBMods.prefix} Error invalid save type")
+                UChat.chat("${MCBMods.prefix}Error invalid save type")
             }
         }
-        UChat.chat("Debug: ${Loadouts.loadouts[index]}")
-        UChat.chat("${MCBMods.prefix} Loadout slot $slot successfully created")
+        UChat.chat("${MCBMods.prefix}Loadout slot $slot successfully created")
         Loadouts.writeSave()
     }
 
@@ -90,8 +89,12 @@ class LoadoutCommand: Command("loadout") {
     fun load(@DisplayName("slot") slot: Int) {
         val index = slot.validate()
         if (index < 0) return
+        if(!mc.thePlayer.inventory.armorInventory.all { it == null }
+                || !mc.thePlayer.inventory.mainInventory.all { it == null }) {
+            UChat.chat("${MCBMods.prefix}Make sure your inventory is clear!")
+        }
 
-        // TODO: Load
+        Loadouts.load(index)
     }
 
     @SubCommand(value = "export", description = "Export a loadout to clipboard")
@@ -110,7 +113,7 @@ class LoadoutCommand: Command("loadout") {
         })
 
         UDesktop.setClipboardString("[MCBMods-Loadout]:1->${data}")
-        UChat.chat("${MCBMods.prefix} Loadout slot $slot successfully copied to clipboard")
+        UChat.chat("${MCBMods.prefix}Loadout slot $slot successfully copied to clipboard")
     }
 }
 
@@ -119,7 +122,7 @@ fun Int.validate(): Int {
     return if (decremented in 0..<Loadouts.LOADOUTS_SIZE) {
         decremented
     } else {
-        UChat.chat("${MCBMods.prefix} Slot must be between 1-10")
+        UChat.chat("${MCBMods.prefix}Slot must be between 1-10")
         -1
     }
 }

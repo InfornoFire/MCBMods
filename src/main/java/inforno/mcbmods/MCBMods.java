@@ -80,6 +80,7 @@ public class MCBMods {
         KeyBinds.register();
         MinecraftForge.EVENT_BUS.register(new Events());
         MinecraftForge.EVENT_BUS.register(new FMLEvents());
+        MinecraftForge.EVENT_BUS.register(Loadouts.INSTANCE);
     }
 
     @EventHandler
