@@ -93,11 +93,7 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
     compileOnly("org.spongepowered:mixin:0.8.5")
 
-    shadowImplementation(platform(kotlin("bom")))
-    shadowImplementation(platform(ktor("bom", "2.2.4", addSuffix = false)))
-
-    shadowImplementation(ktor("serialization-kotlinx-json"))
-    shadowImplementation(ktor("serialization-gson"))
+    shadowImplementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     modImplementation(fileTree("libs"))
 }
@@ -139,10 +135,7 @@ tasks {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         configurations = listOf(shadowImplementation)
 
-        relocate("io.ktor", "inforno.mcbmods..ktor")
         relocate("kotlinx.serialization", "inforno.mcbmods.ktx-serialization")
-        relocate("kotlinx.coroutines", "inforno.mcbmods.ktx-coroutines")
-        relocate("com.google.gson", "inforno.mcbmods.gson")
 
         exclude(
             "**/LICENSE.txt",
@@ -165,11 +158,3 @@ kotlin {
         languageVersion.set(JavaLanguageVersion.of(8))
     }
 }
-
-
-fun DependencyHandler.ktor(module: String, version: String? = null, addSuffix: Boolean = true) =
-    "io.ktor:ktor-$module${if (addSuffix) "-jvm" else ""}${version?.let { ":$version" } ?: ""}"
-
-fun DependencyHandler.ktorClient(module: String, version: String? = null) = ktor("client-${module}", version)
-
-fun DependencyHandler.ktorServer(module: String, version: String? = null) = ktor("server-${module}", version)
