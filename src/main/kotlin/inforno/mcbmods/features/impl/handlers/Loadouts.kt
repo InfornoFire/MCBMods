@@ -2,12 +2,15 @@
  * MCBMods
  * Copyright (C) 2018-2024 Inforno
  *
- * This file is a derivative work based on Waypoints.kt from Skytils
+ * This file contains derivative code based on Waypoints.kt from Skytils
  * https://github.com/Skytils/SkytilsMod/blob/2432c16195abea612ef2d3153a6c1c59246c9ea7/src/main/kotlin/gg/skytils/skytilsmod/features/impl/handlers/Waypoints.kt
- *
- * Original work:
  * Skytils - Hypixel Skyblock Quality of Life Mod
  * Copyright (C) 2020-2023 Skytils
+ *
+ * This file contains derivative code based on DirectContainerManager.java from Jimeo Wan and Inventory Tweaks
+ * https://github.com/Inventory-Tweaks/inventory-tweaks/blob/c6b9882c5f2c332e376832d2097e54a99ef99911/src/main/java/invtweaks/container/DirectContainerManager.java
+ * Inventory Tweaks (Kobata)
+ * Copyright (c) 2011-2013 Marwane Kalam-Alami
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,7 +32,7 @@ import gg.essential.universal.UChat
 import inforno.mcbmods.MCBMods
 import inforno.mcbmods.MCBModsKt
 import inforno.mcbmods.core.PersistentSave
-import inforno.mcbmods.gui.LoadoutTimerGui
+import inforno.mcbmods.gui.LoadoutMessageGui
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -56,7 +59,7 @@ object Loadouts : PersistentSave(File(MCBModsKt.configDir, "loadouts.json")) {
 
     private const val LOADOUT_DELAY = 7
     private val time = AtomicInteger(0)
-    private var delay = false
+    private var state = State.IDLE
 
     fun getLoadoutFromString(str: String): Loadout? {
         if (str.startsWith("[MCBMods-Loadout]:")) {
@@ -85,23 +88,66 @@ object Loadouts : PersistentSave(File(MCBModsKt.configDir, "loadouts.json")) {
                 val itemID = Item.itemRegistry.getIDForObject(item)
                 UChat.say("/shop buy $itemID:${it.dmg} ${it.count}")
             }
+            delay(500L)
+            state = State.SHOP_WAITING
+            delay(2500L)
+            state = State.SORTING
+            sort(slotIndex)
+            delay(500L)
+            state = State.IDLE
         }
 
         CoroutineScope(Dispatchers.Default).launch {
-            delay = true
+            state = State.LOADOUT_DELAY
             time.set(LOADOUT_DELAY)
             repeat(LOADOUT_DELAY) {
                 delay(1000L)
                 time.set(time.get() - 1)
             }
-            delay = false
+            state = State.IDLE
+        }
+    }
+
+    private fun sort(slotIndex: Int) {
+        putHeldItemDown()
+        loadouts[slotIndex].loadoutItems.forEach { loadoutItem ->
+            val targetSlot = mc.thePlayer.inventoryContainer.inventorySlots.find {
+                val item = it.stack?.item
+                item?.registryName == loadoutItem.id && item.getDamage(it.stack) == loadoutItem.dmg
+            }
+            targetSlot?.let { slot ->
+                swapItems(slot.slotNumber, loadoutItem.slot)
+            }
+        }
+        putHeldItemDown()
+    }
+
+    private fun swapItems(srcSlot: Int, destSlot: Int) {
+        if (srcSlot == destSlot) return
+        val playerController = mc.playerController
+        val container = mc.thePlayer.inventoryContainer
+        val emptyDest = container.inventorySlots[destSlot].stack == null
+        playerController.windowClick(container.windowId, srcSlot, 0, 0, mc.thePlayer)
+        playerController.windowClick(container.windowId, destSlot, 0, 0, mc.thePlayer)
+        if (!emptyDest) {
+            playerController.windowClick(container.windowId, srcSlot, 0, 0, mc.thePlayer)
+        }
+    }
+
+    private fun putHeldItemDown() {
+        val targetSlot = mc.thePlayer.inventoryContainer.inventorySlots.find { !it.hasStack && it.slotNumber > 4 }
+        targetSlot?.let { slot ->
+            mc.playerController.windowClick(mc.thePlayer.inventoryContainer.windowId, slot.slotNumber, 0, 0, mc.thePlayer)
         }
     }
 
     @SubscribeEvent
-    fun onRender(event: RenderGameOverlayEvent.Text){
-        if (delay) {
-            LoadoutTimerGui(mc, event.resolution, time.get())
+    fun onRender(event: RenderGameOverlayEvent.Text) {
+        when (state) {
+            State.IDLE -> return
+            State.LOADOUT_DELAY -> LoadoutMessageGui(mc, event.resolution, "Loadout loading in ${time.get()}")
+            State.SHOP_WAITING -> LoadoutMessageGui(mc, event.resolution, "Waiting for purchase...")
+            State.SORTING -> LoadoutMessageGui(mc, event.resolution, "Sorting items...")
         }
     }
 
@@ -142,3 +188,10 @@ data class LoadoutItem(
     val count: Int,
     val slot: Int
 )
+
+enum class State {
+    IDLE,
+    LOADOUT_DELAY,
+    SHOP_WAITING,
+    SORTING
+}

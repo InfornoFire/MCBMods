@@ -2,10 +2,8 @@
  * MCBMods
  * Copyright (C) 2018-2024 Inforno
  *
- * Portions of this file are a derivative work based on WaypointShareGui.kt from Skytils
+ * This file contains derivative work based on WaypointShareGui.kt from Skytils
  * https://github.com/Skytils/SkytilsMod/blob/2432c16195abea612ef2d3153a6c1c59246c9ea7/src/main/kotlin/gg/skytils/skytilsmod/gui/WaypointShareGui.kt
- *
- * Original work:
  * Skytils - Hypixel Skyblock Quality of Life Mod
  * Copyright (C) 2020-2023 Skytils
  *
@@ -55,33 +53,36 @@ class LoadoutCommand: Command("loadout") {
 
         when (type) {
             "inventory" -> {
-                val player = mc.thePlayer
-                val inventory = player.inventory
                 val itemsData = hashSetOf<LoadoutItem>()
 
-                for (itemSlot in 0 until inventory.sizeInventory) {
-                    val itemStack = inventory.getStackInSlot(itemSlot)
-                    itemStack?.let {
+                mc.thePlayer.inventoryContainer.inventorySlots.forEach { invSlot ->
+                    if (invSlot.slotNumber <= 5) return@forEach
+                    invSlot.stack?.let { stack ->
                         itemsData.add(LoadoutItem(
-                            id = itemStack.item.registryName,
-                            dmg = if (!itemStack.item.isDamageable) itemStack.item.getDamage(itemStack) else 0,
-                            count = itemStack.stackSize,
-                            slot = itemSlot
+                            id = stack.item.registryName,
+                            dmg = if (!stack.item.isDamageable) stack.item.getDamage(stack) else 0,
+                            count = stack.stackSize,
+                            slot = invSlot.slotNumber
                         ))
                     }
                 }
 
                 Loadouts.loadouts[index] = Loadout(itemsData)
+                UChat.chat("${MCBMods.prefix}Loadout slot $slot successfully created")
             }
             "clipboard" -> {
                 val str = UDesktop.getClipboardString()
-                Loadouts.getLoadoutFromString(str)?.let { Loadouts.loadouts[index] = it }
+                Loadouts.getLoadoutFromString(str)?.also {
+                    Loadouts.loadouts[index] = it
+                    UChat.chat("${MCBMods.prefix}Loadout slot $slot successfully created")
+                } ?: {
+                    UChat.chat("${MCBMods.prefix}Invalid loadout on clipboard")
+                }
             }
             else -> {
                 UChat.chat("${MCBMods.prefix}Error invalid save type")
             }
         }
-        UChat.chat("${MCBMods.prefix}Loadout slot $slot successfully created")
         Loadouts.writeSave()
     }
 

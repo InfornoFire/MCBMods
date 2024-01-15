@@ -23,17 +23,16 @@ import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
 
-class LoadoutTimerGui(
+class LoadoutMessageGui(
     mc: Minecraft,
     scaledResolution: ScaledResolution,
-    time: Int
+    message: String
 ) : Gui() {
     init {
-        val text = "Loadout loading in $time"
-        val textX = (scaledResolution.scaledWidth - mc.fontRendererObj.getStringWidth(text)) / 2f
+        val textX = (scaledResolution.scaledWidth - mc.fontRendererObj.getStringWidth(message)) / 2f
         val textY = scaledResolution.scaledHeight - 59f
         GlStateManager.pushMatrix()
-        mc.fontRendererObj.drawString(text, textX, textY, 0xFF9A00, false)
+        mc.fontRendererObj.drawString(message, textX, textY, 0xFF9A00, false)
         GlStateManager.popMatrix()
     }
 }
