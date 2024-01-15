@@ -153,6 +153,7 @@ object Loadouts : PersistentSave(File(MCBModsKt.configDir, "loadouts.json")) {
 
     override fun read(reader: Reader) {
         val str = reader.readText()
+        if (str.isEmpty()) return
         runCatching {
             loadouts.clear()
             loadouts.addAll(json.decodeFromString<LoadoutList>(str).loadouts)
@@ -167,7 +168,7 @@ object Loadouts : PersistentSave(File(MCBModsKt.configDir, "loadouts.json")) {
     }
 
     override fun setDefault(writer: Writer) {
-        writer.write(json.encodeToString(LoadoutList(emptyList())))
+        writer.write(json.encodeToString(LoadoutList(loadouts)))
     }
 }
 
