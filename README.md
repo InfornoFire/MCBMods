@@ -24,3 +24,4 @@ MCBMods would not be possible without the following open source software:
 | [Skytils](https://github.com/Skytils/SkytilsMod/tree/dev)                      | [AGPL 3.0](https://github.com/Skytils/SkytilsMod/blob/dev/LICENSE.md)                                             |
 | [Not Enough Updates](https://github.com/NotEnoughUpdates/NotEnoughUpdates)     | [GPL 3.0](https://github.com/NotEnoughUpdates/NotEnoughUpdates/blob/master/COPYING)                               |
 | [Flan's Mod](https://github.com/FlansMods/FlansMod/tree/1.8)                   | [CCPL](https://github.com/FlansMods/FlansMod/blob/1.8/LICENSE.txt)                                                |
+| [Inventory Tweaks](https://github.com/Inventory-Tweaks/inventory-tweaks)       | [MIT](https://github.com/Inventory-Tweaks/inventory-tweaks/blob/develop/LICENSE.md)                               |
