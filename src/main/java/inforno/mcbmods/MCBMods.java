@@ -41,6 +41,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -105,6 +106,10 @@ public class MCBMods {
                 customEnderChest = testedClass;
             }
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "There is an error with compatibility with MCB Client. Make sure you have the latest versions of both mods installed and if so contact Inforno!",
+                    "MCBMods Error",
+                    JOptionPane.ERROR_MESSAGE);
             LOGGER.error("MCB Client dependency error:", e);
         }
 
@@ -132,7 +137,22 @@ public class MCBMods {
             BufferedReader br = new BufferedReader(new InputStreamReader(version.openStream()));
             latestVersion = br.readLine();
             latestVersionLink = br.readLine();
-            return new ComparableVersion(latestVersion).compareTo(new ComparableVersion(MCBMods.VERSION));
+            br.close();
+
+            URL bannedList = new URL("https://raw.githubusercontent.com/InfornoFire/MCBMods-Data/master/BannedVersions.txt");
+            br = new BufferedReader(new InputStreamReader(bannedList.openStream()));
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (VERSION.equals(line)) {
+                    JOptionPane.showMessageDialog(null,
+                            "WARNING! You are using an illegal version of MCBMods! Do not go further or you may be banned from the main server!",
+                            "MCBMods Warning",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            }
+            br.close();
+
+            return new ComparableVersion(latestVersion).compareTo(new ComparableVersion(VERSION));
         } catch (IOException e) {
             LOGGER.warn("Could not check version:", e);
         }
@@ -151,6 +171,7 @@ public class MCBMods {
                 float[] val = {Float.parseFloat(data[1]), Float.parseFloat(data[2]), Float.parseFloat(data[3])};
                 shopData.put(data[0].hashCode(), val);
             }
+            br.close();
         } catch (IOException e) {
             EssentialAPI.getNotifications().push("MCBMods", "Failed to Load Shop Data!");
             LOGGER.warn("Failed to Load Shop Data:", e);
