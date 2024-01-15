@@ -56,7 +56,7 @@ object Loadouts : PersistentSave(File(MCBModsKt.configDir, "loadouts.json")) {
     const val LOADOUTS_SIZE = 10
     val loadouts = MutableList(size = LOADOUTS_SIZE, init = { Loadout(emptySet()) })
 
-    private const val LOADOUT_DELAY = 7
+    private const val LOADOUT_DELAY = 15
     private val time = AtomicInteger(0)
     private var state = State.IDLE
 
