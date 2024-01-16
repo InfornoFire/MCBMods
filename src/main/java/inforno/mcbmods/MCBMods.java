@@ -29,6 +29,7 @@ import inforno.mcbmods.features.impl.handlers.Loadouts;
 import inforno.mcbmods.keybinds.KeyBinds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -45,6 +46,7 @@ import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
@@ -58,7 +60,7 @@ public class MCBMods {
     public static MCBMods instance;
 
     public static final String NAME = "MCBMods";
-    public static final String VERSION = "1.5.0beta1";
+    public static final String VERSION = "1.5.0beta2";
     public static final String MODID = "mcbmods";
 
     public static final Logger LOGGER = LogManager.getLogger(MODID);
@@ -75,6 +77,8 @@ public class MCBMods {
     public static HashMap<Integer, float[]> shopData = new HashMap<>();
 
     public static Class<?> customEnderChest;
+    public static Class<?> customContainerEnderChest;
+    public static Field customEnderChestInventory;
 
     @EventHandler
     public void preinit(FMLPreInitializationEvent e) {
@@ -105,6 +109,14 @@ public class MCBMods {
             if (GuiContainer.class.isAssignableFrom(testedClass)) {
                 customEnderChest = testedClass;
             }
+
+            testedClass = Class.forName("com.mcb.client.c.e");
+            if (Container.class.isAssignableFrom(testedClass)) {
+                customContainerEnderChest = testedClass;
+            }
+
+            customEnderChestInventory = customContainerEnderChest.getDeclaredField("a");
+            customEnderChestInventory.setAccessible(true);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                     "There is an error with compatibility with MCB Client. Make sure you have the latest versions of both mods installed and if so contact Inforno!",

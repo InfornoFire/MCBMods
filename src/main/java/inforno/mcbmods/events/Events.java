@@ -181,10 +181,15 @@ public class Events {
     }
 
     @SubscribeEvent
-    public void onGUIDrawnEvent(GuiScreenEvent.BackgroundDrawnEvent event) {
+    public void onGUIDrawnEvent(GuiScreenEvent.BackgroundDrawnEvent event) throws IllegalAccessException {
         if (event != null && MCBModsConfig.chestWorth && (event.gui instanceof GuiChest || MCBMods.customEnderChest.isInstance(event.gui))) {
             GuiContainer chestGui = (GuiContainer) event.gui;
-            IInventory chest = ((ContainerChest) chestGui.inventorySlots).getLowerChestInventory();
+            IInventory chest;
+            if (event.gui instanceof GuiChest) {
+                chest = ((ContainerChest) chestGui.inventorySlots).getLowerChestInventory();
+            } else {
+                chest = (IInventory) MCBMods.customEnderChestInventory.get(chestGui.inventorySlots);
+            }
             float totalWorth = 0.0f;
             float[] worth;
             for (int i = 0; i < chest.getSizeInventory(); i++) {

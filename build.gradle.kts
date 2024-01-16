@@ -28,7 +28,7 @@ plugins {
     idea
 }
 
-version = "1.5.0beta1"
+version = "1.5.0beta2"
 group = "inforno.mcbmods"
 
 val accessTransformerName = "mcbmods_at.cfg"
