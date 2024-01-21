@@ -143,6 +143,15 @@ tasks {
             "META-INF/maven/**",
             "META-INF/versions/**"
         )
+
+        into("META-INF") {
+            from("LICENSE.md")
+        }
+
+        into("META-INF/licenses") {
+            from("licenses")
+        }
+
         mergeServiceFiles()
     }
 }
