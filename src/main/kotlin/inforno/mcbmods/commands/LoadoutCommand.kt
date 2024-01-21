@@ -56,7 +56,7 @@ class LoadoutCommand: Command("loadout") {
                 val itemsData = hashSetOf<LoadoutItem>()
 
                 mc.thePlayer.inventoryContainer.inventorySlots.forEach { invSlot ->
-                    if (invSlot.slotNumber <= 5) return@forEach
+                    if (invSlot.slotNumber <= 4) return@forEach
                     invSlot.stack?.let { stack ->
                         itemsData.add(LoadoutItem(
                             id = stack.item.registryName,
@@ -90,6 +90,7 @@ class LoadoutCommand: Command("loadout") {
     fun load(@DisplayName("slot") slot: Int) {
         val index = slot.validate()
         if (index < 0) return
+        UChat.chat("${MCBMods.prefix}This feature is experimental!")
         if(!mc.thePlayer.inventory.armorInventory.all { it == null }
                 || !mc.thePlayer.inventory.mainInventory.all { it == null }) {
             UChat.chat("${MCBMods.prefix}Make sure your inventory is clear!")

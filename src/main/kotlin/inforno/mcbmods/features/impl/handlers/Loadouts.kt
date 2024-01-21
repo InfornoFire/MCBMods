@@ -134,7 +134,7 @@ object Loadouts : PersistentSave(File(MCBModsKt.configDir, "loadouts.json")) {
     }
 
     private fun putHeldItemDown() {
-        val targetSlot = mc.thePlayer.inventoryContainer.inventorySlots.find { !it.hasStack && it.slotNumber > 4 }
+        val targetSlot = mc.thePlayer.inventoryContainer.inventorySlots.find { !it.hasStack && it.slotNumber > 8 }
         targetSlot?.let { slot ->
             mc.playerController.windowClick(mc.thePlayer.inventoryContainer.windowId, slot.slotNumber, 0, 0, mc.thePlayer)
         }
