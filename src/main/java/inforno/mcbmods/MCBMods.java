@@ -60,7 +60,7 @@ public class MCBMods {
     public static MCBMods instance;
 
     public static final String NAME = "MCBMods";
-    public static final String VERSION = "1.5.0beta2";
+    public static final String VERSION = "1.5.0";
     public static final String MODID = "mcbmods";
 
     public static final Logger LOGGER = LogManager.getLogger(MODID);
